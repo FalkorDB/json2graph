@@ -10,6 +10,9 @@ jobs:
   test:
     name: Test with Python ${{ matrix.python }}
     runs-on: ubuntu-latest
+    
+    env:
+      UV_SYSTEM_PYTHON: '1'
 
     services:
       falkordb:
@@ -21,21 +24,19 @@ jobs:
 
     strategy:
       matrix:
-        python: ['3.10', '3.11', '3.12']
+        python: ['3.10', '3.11', '3.12', '3.13']
       fail-fast: false
 
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/setup-python@v6
-        with:
-          python-version: ${{matrix.python}}
-
       - name: Install uv
-        run: pip install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: ${{ matrix.python }}
 
       - name: Install dependencies
-        run: uv pip install --system -e .
+        run: uv sync
 
       - name: Run Tests
-        run: python -m unittest discover tests -v
+        run: uv run --no-sync python -m unittest discover tests -v
