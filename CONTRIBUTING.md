@@ -11,8 +11,15 @@ cd JSON-importer
 ```
 
 2. Install dependencies:
+
+Using uv (recommended):
 ```bash
-pip install -r requirements.txt
+uv pip install -e .
+```
+
+Or using pip:
+```bash
+pip install -e .
 ```
 
 3. Run tests:

@@ -20,11 +20,19 @@ JSON-importer converts JSON data (from files or dictionaries) into a graph struc
 
 ## Installation
 
+### Using uv (recommended)
+
 ```bash
-pip install -r requirements.txt
+uv pip install -e .
 ```
 
-Or install directly:
+### Using pip
+
+```bash
+pip install .
+```
+
+Or install dependencies directly:
 
 ```bash
 pip install falkordb
