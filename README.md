@@ -36,7 +36,7 @@ powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
 pip install uv
 ```
 
-Then install json2graph:
+Then install json2graph for development (editable mode):
 ```bash
 uv pip install -e .
 ```
@@ -48,8 +48,9 @@ uv pip install falkordb
 
 ### Using pip
 
+For development (editable mode):
 ```bash
-pip install .
+pip install -e .
 ```
 
 Or install dependencies directly:
@@ -251,7 +252,7 @@ python -m pytest tests/
 ## Requirements
 
 - Python >= 3.8
-- falkordb >= 4.0.0
+- falkordb >= 1.0.0
 - FalkorDB server running and accessible
 
 ## License
