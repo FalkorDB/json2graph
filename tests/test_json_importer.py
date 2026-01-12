@@ -182,6 +182,29 @@ class TestJSONImporter(unittest.TestCase):
         props = {}
         formatted = importer._format_properties(props)
         self.assertEqual(formatted, "{}")
+    
+    @patch('json_importer.json_importer.FalkorDB')
+    def test_escape_string(self, mock_falkordb):
+        """Test string escaping for Cypher injection prevention."""
+        mock_falkordb.return_value = self.mock_db
+        
+        importer = JSONImporter()
+        
+        # Test backslash escaping
+        escaped = importer._escape_string("path\\to\\file")
+        self.assertEqual(escaped, "path\\\\to\\\\file")
+        
+        # Test single quote escaping
+        escaped = importer._escape_string("It's a test")
+        self.assertEqual(escaped, "It\\'s a test")
+        
+        # Test both backslash and quote
+        escaped = importer._escape_string("C:\\user's\\path")
+        self.assertEqual(escaped, "C:\\\\user\\'s\\\\path")
+        
+        # Test normal string (no special chars)
+        escaped = importer._escape_string("normal text")
+        self.assertEqual(escaped, "normal text")
 
 
 if __name__ == '__main__':

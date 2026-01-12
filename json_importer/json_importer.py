@@ -138,18 +138,23 @@ class JSONImporter:
         # Create relationship using node content hashes
         rel_type_sanitized = self._sanitize_label(rel_type)
         
+        # Escape hash values to prevent injection
+        from_id_escaped = self._escape_string(from_id)
+        to_id_escaped = self._escape_string(to_id)
+        
         # We need to match nodes by their properties since we're using content hashes
         # Store hash as a property for matching
         query = f"""
         MATCH (a), (b)
-        WHERE a._hash = '{from_id}' AND b._hash = '{to_id}'
+        WHERE a._hash = '{from_id_escaped}' AND b._hash = '{to_id_escaped}'
         MERGE (a)-[r:{rel_type_sanitized}]->(b)
         """
         try:
             self.graph.query(query)
         except Exception as e:
-            # Relationships might fail if nodes don't have _hash property
-            # This is expected for the initial implementation
+            # Relationships might fail if nodes don't have _hash property initially
+            # or if nodes haven't been created yet. This is acceptable in some cases.
+            # For debugging, you can log: print(f"Relationship creation warning: {str(e)}")
             pass
     
     def _process_value(self, value: Any, parent_node_id: Optional[str], 
@@ -300,6 +305,22 @@ class JSONImporter:
             sanitized = 'L' + sanitized
         return sanitized or "Node"
     
+    def _escape_string(self, value: str) -> str:
+        """
+        Escape string for safe use in Cypher queries.
+        
+        Args:
+            value: String to escape
+            
+        Returns:
+            Escaped string safe for Cypher
+        """
+        # Escape backslashes first to prevent double-escaping
+        escaped = str(value).replace("\\", "\\\\")
+        # Then escape single quotes
+        escaped = escaped.replace("'", "\\'")
+        return escaped
+    
     def _format_properties(self, properties: Dict[str, Any]) -> str:
         """
         Format properties dictionary for Cypher query.
@@ -318,8 +339,8 @@ class JSONImporter:
             sanitized_key = self._sanitize_label(key)
             
             if isinstance(value, str):
-                # Escape single quotes in strings
-                escaped_value = value.replace("'", "\\'")
+                # Escape strings properly to prevent injection
+                escaped_value = self._escape_string(value)
                 props.append(f"{sanitized_key}: '{escaped_value}'")
             elif isinstance(value, bool):
                 props.append(f"{sanitized_key}: {str(value).lower()}")
@@ -328,8 +349,8 @@ class JSONImporter:
             elif value is None:
                 props.append(f"{sanitized_key}: null")
             else:
-                # Convert other types to string
-                escaped_value = str(value).replace("'", "\\'")
+                # Convert other types to string and escape
+                escaped_value = self._escape_string(str(value))
                 props.append(f"{sanitized_key}: '{escaped_value}'")
         
         return "{" + ", ".join(props) + "}"

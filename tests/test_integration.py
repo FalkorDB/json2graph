@@ -60,6 +60,38 @@ class TestJSONImporterIntegration(unittest.TestCase):
         self.assertGreater(self.mock_graph.query.call_count, 5)
     
     @patch('json_importer.json_importer.FalkorDB')
+    def test_cypher_injection_prevention(self, mock_falkordb):
+        """Test that malicious input is properly escaped."""
+        mock_falkordb.return_value = self.mock_db
+        
+        importer = JSONImporter()
+        
+        # Try various injection attempts
+        data = {
+            "malicious1": "'; DROP DATABASE; --",
+            "malicious2": "test' OR '1'='1",
+            "path": "C:\\Users\\test"
+        }
+        
+        importer.convert(data)
+        
+        # Verify queries were made
+        self.assertTrue(self.mock_graph.query.called)
+        
+        # Get the CREATE query (first call)
+        query = self.mock_graph.query.call_args_list[0][0][0]
+        
+        # Verify single quotes are properly escaped (should contain \')
+        self.assertIn("\\'", query)
+        
+        # Verify the path has escaped backslashes
+        self.assertIn("C:\\\\Users\\\\test", query)
+        
+        # Verify query structure is valid - should start with CREATE and end properly
+        self.assertTrue(query.strip().startswith("CREATE"))
+        self.assertTrue(query.strip().endswith("RETURN n"))
+    
+    @patch('json_importer.json_importer.FalkorDB')
     def test_array_of_primitives(self, mock_falkordb):
         """Test handling arrays of primitive values."""
         mock_falkordb.return_value = self.mock_db
