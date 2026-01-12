@@ -4,8 +4,12 @@ Main module for JSON to FalkorDB graph converter.
 
 import json
 import hashlib
+import logging
 from typing import Any, Dict, List, Optional, Union
 from falkordb import FalkorDB
+
+# Set up module logger
+logger = logging.getLogger(__name__)
 
 
 class JSONImporter:
@@ -142,20 +146,21 @@ class JSONImporter:
         from_id_escaped = self._escape_string(from_id)
         to_id_escaped = self._escape_string(to_id)
         
-        # We need to match nodes by their properties since we're using content hashes
-        # Store hash as a property for matching
+        # Use a more efficient query pattern that filters nodes directly
+        # instead of creating a cartesian product
         query = f"""
-        MATCH (a), (b)
-        WHERE a._hash = '{from_id_escaped}' AND b._hash = '{to_id_escaped}'
+        MATCH (a {{_hash: '{from_id_escaped}'}}), (b {{_hash: '{to_id_escaped}'}})
         MERGE (a)-[r:{rel_type_sanitized}]->(b)
         """
         try:
             self.graph.query(query)
         except Exception as e:
+            # Log the error but continue processing
             # Relationships might fail if nodes don't have _hash property initially
-            # or if nodes haven't been created yet. This is acceptable in some cases.
-            # For debugging, you can log: print(f"Relationship creation warning: {str(e)}")
-            pass
+            # or if nodes haven't been created yet
+            logger.warning(
+                f"Failed to create relationship {rel_type_sanitized} from {from_id[:8]}... to {to_id[:8]}...: {str(e)}"
+            )
     
     def _process_value(self, value: Any, parent_node_id: Optional[str], 
                       relationship_name: str, key_name: str) -> Optional[str]:
