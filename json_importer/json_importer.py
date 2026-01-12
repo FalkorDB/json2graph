@@ -167,7 +167,10 @@ class JSONImporter:
             Node hash if a node was created, None otherwise
         """
         if value is None:
-            # Handle null values as properties
+            # Handle null values - create node if no parent, otherwise skip
+            if parent_node_id is None:
+                properties = {"value": None, "_hash": self._generate_hash({"Null": None})}
+                return self._create_node("Null", properties)
             return None
         
         elif isinstance(value, dict):
@@ -179,7 +182,14 @@ class JSONImporter:
             return self._process_array(value, parent_node_id, relationship_name, key_name)
         
         else:
-            # Primitive value - will be added as property to parent
+            # Primitive value - create node if no parent, otherwise add as property to parent
+            if parent_node_id is None:
+                # Root-level primitive, create a node for it
+                properties = {
+                    "value": value,
+                    "_hash": self._generate_hash({key_name: value})
+                }
+                return self._create_node(key_name or "Primitive", properties)
             return None
     
     def _process_object(self, obj: Dict, parent_node_id: Optional[str], 

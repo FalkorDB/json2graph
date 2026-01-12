@@ -1,0 +1,35 @@
+{
+  "product": "Gaming Laptop",
+  "brand": "TechMaster",
+  "price": 1299.99,
+  "in_stock": true,
+  "specifications": {
+    "processor": "Intel Core i7-12700H",
+    "ram": "16GB DDR4",
+    "storage": "512GB NVMe SSD",
+    "graphics": "NVIDIA RTX 3060",
+    "display": "15.6 inch FHD 144Hz"
+  },
+  "reviews": [
+    {
+      "author": "gamer123",
+      "rating": 5,
+      "comment": "Excellent performance for gaming!",
+      "date": "2024-01-15"
+    },
+    {
+      "author": "techreview",
+      "rating": 4,
+      "comment": "Great value for the price, but could use better cooling.",
+      "date": "2024-01-20"
+    },
+    {
+      "author": "buyersguide",
+      "rating": 5,
+      "comment": "Highly recommended for both gaming and productivity.",
+      "date": "2024-02-01"
+    }
+  ],
+  "tags": ["gaming", "laptop", "high-performance", "rtx"],
+  "warranty_years": 2
+}
