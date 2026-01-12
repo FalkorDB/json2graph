@@ -21,7 +21,7 @@ jobs:
 
     strategy:
       matrix:
-        python: ['3.10', '3.11', '3.12', '3.13', '3.14']
+        python: ['3.8', '3.9', '3.10', '3.11', '3.12']
       fail-fast: false
 
     steps:
@@ -31,21 +31,11 @@ jobs:
         with:
           python-version: ${{matrix.python}}
 
-      - uses: snok/install-poetry@v1
-        with:
-          version: 1.7.1
-          virtualenvs-create: true
-          virtualenvs-in-project: true
+      - name: Install uv
+        run: pip install uv
 
       - name: Install dependencies
-        run: poetry install --no-interaction
+        run: uv pip install --system -e .
 
       - name: Run Tests
-        run: poetry run pytest --cov --cov-report=xml
-
-      - name: Upload coverage
-        uses: codecov/codecov-action@v5
-        if: matrix.python == '3.10'
-        with:
-          fail_ci_if_error: false
-          token: ${{ secrets.CODECOV_TOKEN }}
+        run: python -m unittest discover tests -v
