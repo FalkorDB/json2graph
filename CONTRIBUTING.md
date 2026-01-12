@@ -10,7 +10,19 @@ git clone https://github.com/FalkorDB/json2graph.git
 cd json2graph
 ```
 
-2. Install dependencies:
+2. Install uv (if not already installed):
+```bash
+# On macOS and Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# On Windows
+powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# Or via pip
+pip install uv
+```
+
+3. Install dependencies:
 
 Using uv (recommended):
 ```bash
@@ -22,7 +34,7 @@ Or using pip:
 pip install -e .
 ```
 
-3. Run tests:
+4. Run tests:
 ```bash
 python -m unittest discover tests
 ```
@@ -30,8 +42,14 @@ python -m unittest discover tests
 ## Running Tests
 
 ### All Tests
+Using unittest (no additional dependencies needed):
 ```bash
 python -m unittest discover tests -v
+```
+
+Using pytest (install first with `uv pip install pytest`):
+```bash
+python -m pytest tests/ -v
 ```
 
 ### Specific Test File

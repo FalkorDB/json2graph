@@ -22,8 +22,28 @@ json2graph converts JSON data (from files or dictionaries) into a graph structur
 
 ### Using uv (recommended)
 
+[uv](https://docs.astral.sh/uv/) is a fast Python package installer and resolver, written in Rust. It's recommended for faster dependency resolution and installation.
+
+Install uv if you haven't already:
+```bash
+# On macOS and Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# On Windows
+powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# Or via pip
+pip install uv
+```
+
+Then install json2graph:
 ```bash
 uv pip install -e .
+```
+
+Or install dependencies directly:
+```bash
+uv pip install falkordb
 ```
 
 ### Using pip
@@ -206,16 +226,26 @@ See the `examples/` directory for more detailed examples:
 
 ## Testing
 
-Run the test suite:
-
-```bash
-python -m pytest tests/
-```
-
-Or using unittest:
+Run the test suite using unittest:
 
 ```bash
 python -m unittest discover tests
+```
+
+With verbose output:
+
+```bash
+python -m unittest discover tests -v
+```
+
+Or using pytest (if installed):
+
+```bash
+# Install pytest with uv
+uv pip install pytest
+
+# Run tests
+python -m pytest tests/
 ```
 
 ## Requirements
