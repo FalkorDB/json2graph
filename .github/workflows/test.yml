@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     
     env:
-      UV_SYSTEM_PYTHON: 1
+      UV_SYSTEM_PYTHON: '1'
 
     services:
       falkordb:
