@@ -39,3 +39,16 @@ dev-dependencies = []
 
 [tool.setuptools]
 packages = ["json2graph"]
+
+[tool.coverage.run]
+source = ["json2graph"]
+omit = ["*/tests/*", "*/test_*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]
