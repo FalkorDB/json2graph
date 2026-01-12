@@ -1,0 +1,10 @@
+FalkorDB
+falkordb
+JSON
+json
+importer
+py
+pypi
+CI
+https
+www

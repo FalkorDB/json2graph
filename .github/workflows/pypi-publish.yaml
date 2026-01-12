@@ -1,0 +1,17 @@
+# Run this job on tagging
+name: Release to PYPI
+permissions:
+  contents: read
+on:
+  push:
+    tags:
+      - "v*.*.*"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Build and publish to pypi
+        uses: JRubics/poetry-publish@v2.1
+        with:
+          pypi_token: ${{ secrets.PYPI_API_TOKEN }}
