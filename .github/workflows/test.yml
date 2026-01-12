@@ -39,4 +39,14 @@ jobs:
         run: uv sync
 
       - name: Run Tests
-        run: uv run --no-sync python -m unittest discover tests -v
+        run: uv run --no-sync coverage run -m unittest discover tests -v
+
+      - name: Generate coverage report
+        run: uv run --no-sync coverage xml
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v5
+        if: matrix.python == '3.10'
+        with:
+          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
