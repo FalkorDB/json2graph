@@ -10,7 +10,7 @@ from unittest.mock import Mock, patch
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from json_importer import JSONImporter
+from json2graph import JSONImporter
 
 def verify_file_loading():
     """Verify file loading functionality."""
