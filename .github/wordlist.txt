@@ -15,3 +15,14 @@ SHA
 str
 bool
 unittest
+docstrings
+UTF
+Sanitization
+sanitization
+booleans
+cartesian
+lookups
+uv
+md
+employeesArray
+
