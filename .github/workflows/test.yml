@@ -24,7 +24,7 @@ jobs:
 
     strategy:
       matrix:
-        python: ['3.10', '3.11', '3.12']
+        python: ['3.10', '3.11', '3.12', '3.13']
       fail-fast: false
 
     steps:
@@ -36,7 +36,7 @@ jobs:
           python-version: ${{ matrix.python }}
 
       - name: Install dependencies
-        run: uv pip install -e .
+        run: uv sync
 
       - name: Run Tests
         run: uv run --no-sync python -m unittest discover tests -v
