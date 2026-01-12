@@ -33,7 +33,7 @@ jobs:
           python-version: ${{matrix.python}}
 
       - name: Install dependencies
-        run: uv pip install --system -e .
+        run: uv pip install -e .
 
       - name: Run Tests
-        run: python -m unittest discover tests -v
+        run: uv run python -m unittest discover tests -v
