@@ -34,6 +34,8 @@ jobs:
 
       - name: Install dependencies
         run: uv pip install -e .
+        env:
+          UV_SYSTEM_PYTHON: 1
 
       - name: Run Tests
-        run: uv run python -m unittest discover tests -v
+        run: uv run --no-sync python -m unittest discover tests -v
