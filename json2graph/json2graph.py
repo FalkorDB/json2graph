@@ -22,19 +22,29 @@ class JSONImporter:
     content hashing.
     """
     
-    def __init__(self, host: str = "localhost", port: int = 6379, graph_name: str = "json_graph"):
+    def __init__(self, db: Optional[FalkorDB] = None, host: str = "localhost", port: int = 6379, graph_name: str = "json_graph"):
         """
         Initialize the JSON Importer with database connection details.
         
         Args:
-            host: FalkorDB host address
-            port: FalkorDB port number
+            db: Pre-initialized FalkorDB connection (optional). If provided, host and port are ignored.
+            host: FalkorDB host address (used only if db is not provided)
+            port: FalkorDB port number (used only if db is not provided)
             graph_name: Name of the graph database
         """
-        self.host = host
-        self.port = port
         self.graph_name = graph_name
-        self.db = FalkorDB(host=host, port=port)
+        
+        if db is not None:
+            # Use the provided FalkorDB connection
+            self.db = db
+            self.host = None
+            self.port = None
+        else:
+            # Create a new connection with provided host and port
+            self.host = host
+            self.port = port
+            self.db = FalkorDB(host=host, port=port)
+        
         self.graph = self.db.select_graph(graph_name)
         self._node_cache = {}  # Cache for content hash to node mapping
         

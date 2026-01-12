@@ -31,6 +31,42 @@ class TestJSONImporter(unittest.TestCase):
         self.assertEqual(importer.port, 1234)
         self.assertEqual(importer.graph_name, "testgraph")
         mock_falkordb.assert_called_once_with(host="testhost", port=1234)
+    
+    def test_init_with_db_connection(self):
+        """Test JSONImporter initialization with pre-initialized FalkorDB connection."""
+        # Create a mock FalkorDB connection
+        mock_db = Mock()
+        mock_graph = Mock()
+        mock_db.select_graph.return_value = mock_graph
+        
+        # Initialize with db parameter
+        importer = JSONImporter(db=mock_db, graph_name="testgraph")
+        
+        # Verify that the provided db is used
+        self.assertEqual(importer.db, mock_db)
+        self.assertEqual(importer.graph_name, "testgraph")
+        self.assertIsNone(importer.host)
+        self.assertIsNone(importer.port)
+        mock_db.select_graph.assert_called_once_with("testgraph")
+    
+    @patch('json2graph.json2graph.FalkorDB')
+    def test_init_db_takes_precedence(self, mock_falkordb):
+        """Test that db parameter takes precedence over host/port."""
+        mock_falkordb.return_value = self.mock_db
+        
+        # Create a separate mock for the db parameter
+        custom_db = Mock()
+        custom_graph = Mock()
+        custom_db.select_graph.return_value = custom_graph
+        
+        # Initialize with both db and host/port (db should take precedence)
+        importer = JSONImporter(db=custom_db, host="ignored", port=9999, graph_name="testgraph")
+        
+        # Verify that custom_db is used and FalkorDB constructor was NOT called
+        self.assertEqual(importer.db, custom_db)
+        self.assertIsNone(importer.host)
+        self.assertIsNone(importer.port)
+        mock_falkordb.assert_not_called()
         
     @patch('json2graph.json2graph.FalkorDB')
     def test_clear_db(self, mock_falkordb):

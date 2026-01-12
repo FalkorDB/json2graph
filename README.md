@@ -53,12 +53,17 @@ pip install falkordb
 ```python
 from json2graph import JSONImporter
 
-# Initialize the importer
+# Initialize the importer (Option 1: let it create the connection)
 importer = JSONImporter(
     host="localhost",
     port=6379,
     graph_name="my_graph"
 )
+
+# Or initialize with your own FalkorDB connection (Option 2)
+# from falkordb import FalkorDB
+# db = FalkorDB(host="localhost", port=6379)
+# importer = JSONImporter(db=db, graph_name="my_graph")
 
 # Import from a dictionary
 data = {
@@ -76,6 +81,8 @@ importer.load_from_file("data.json", clear_db=True)
 
 ### Initialize the Importer
 
+**Option 1: Let JSONImporter create the connection** (default)
+
 ```python
 from json2graph import JSONImporter
 
@@ -85,6 +92,27 @@ importer = JSONImporter(
     graph_name="my_graph" # Graph database name (default: "json_graph")
 )
 ```
+
+**Option 2: Pass a pre-initialized FalkorDB connection**
+
+```python
+from falkordb import FalkorDB
+from json2graph import JSONImporter
+
+# Create your own FalkorDB connection
+db = FalkorDB(host="localhost", port=6379)
+
+# Pass it to JSONImporter
+importer = JSONImporter(
+    db=db,                # Pre-initialized FalkorDB connection
+    graph_name="my_graph" # Graph database name
+)
+```
+
+This is useful when you want to:
+- Reuse the same connection across multiple components
+- Configure the connection with custom settings (e.g., password, SSL)
+- Manage the connection lifecycle yourself
 
 ### Convert JSON Dictionary
 
@@ -174,14 +202,15 @@ importer.load_from_file("data.json", clear_db=True)
 
 ### JSONImporter
 
-#### `__init__(host="localhost", port=6379, graph_name="json_graph")`
+#### `__init__(db=None, host="localhost", port=6379, graph_name="json_graph")`
 
 Initialize the JSON Importer.
 
 **Parameters:**
-- `host` (str): FalkorDB host address
-- `port` (int): FalkorDB port number
-- `graph_name` (str): Name of the graph database
+- `db` (FalkorDB, optional): Pre-initialized FalkorDB connection. If provided, `host` and `port` are ignored.
+- `host` (str): FalkorDB host address (used only if `db` is not provided, default: "localhost")
+- `port` (int): FalkorDB port number (used only if `db` is not provided, default: 6379)
+- `graph_name` (str): Name of the graph database (default: "json_graph")
 
 #### `convert(data, clear_db=False, root_label="Root")`
 
