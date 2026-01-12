@@ -1,10 +1,17 @@
 FalkorDB
+FalkorDB's
 falkordb
 JSON
 json
 importer
+JSONImporter
 py
 pypi
 CI
 https
 www
+Cypher
+SHA
+str
+bool
+unittest
