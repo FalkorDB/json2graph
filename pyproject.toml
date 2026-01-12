@@ -35,7 +35,9 @@ Repository = "https://github.com/FalkorDB/json2graph"
 Issues = "https://github.com/FalkorDB/json2graph/issues"
 
 [tool.uv]
-dev-dependencies = []
+dev-dependencies = [
+    "coverage>=7.0.0",
+]
 
 [tool.setuptools]
 packages = ["json2graph"]
