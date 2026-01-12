@@ -1,4 +1,4 @@
-# JSON-importer Implementation Summary
+# json2graph Implementation Summary
 
 ## Overview
 This library provides a complete solution for converting JSON data to FalkorDB graph database format.

@@ -2,7 +2,7 @@
 Example usage of the JSON Importer library.
 """
 
-from json_importer import JSONImporter
+from json2graph import JSONImporter
 
 # Example 1: Simple JSON object
 def example_simple_object():

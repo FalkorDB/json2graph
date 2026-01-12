@@ -7,7 +7,7 @@ import json
 import os
 import tempfile
 from unittest.mock import Mock, MagicMock, patch
-from json_importer import JSONImporter
+from json2graph import JSONImporter
 
 
 class TestJSONImporter(unittest.TestCase):
@@ -20,7 +20,7 @@ class TestJSONImporter(unittest.TestCase):
         self.mock_graph = Mock()
         self.mock_db.select_graph.return_value = self.mock_graph
         
-    @patch('json_importer.json_importer.FalkorDB')
+    @patch('json2graph.json2graph.FalkorDB')
     def test_init(self, mock_falkordb):
         """Test JSONImporter initialization."""
         mock_falkordb.return_value = self.mock_db
@@ -32,7 +32,7 @@ class TestJSONImporter(unittest.TestCase):
         self.assertEqual(importer.graph_name, "testgraph")
         mock_falkordb.assert_called_once_with(host="testhost", port=1234)
         
-    @patch('json_importer.json_importer.FalkorDB')
+    @patch('json2graph.json2graph.FalkorDB')
     def test_clear_db(self, mock_falkordb):
         """Test clearing the database."""
         mock_falkordb.return_value = self.mock_db
@@ -43,7 +43,7 @@ class TestJSONImporter(unittest.TestCase):
         self.mock_graph.query.assert_called_once_with("MATCH (n) DETACH DELETE n")
         self.assertEqual(len(importer._node_cache), 0)
         
-    @patch('json_importer.json_importer.FalkorDB')
+    @patch('json2graph.json2graph.FalkorDB')
     def test_load_from_file(self, mock_falkordb):
         """Test loading JSON from file."""
         mock_falkordb.return_value = self.mock_db
@@ -63,7 +63,7 @@ class TestJSONImporter(unittest.TestCase):
         finally:
             os.unlink(temp_file)
     
-    @patch('json_importer.json_importer.FalkorDB')
+    @patch('json2graph.json2graph.FalkorDB')
     def test_load_from_file_not_found(self, mock_falkordb):
         """Test loading from non-existent file."""
         mock_falkordb.return_value = self.mock_db
@@ -73,7 +73,7 @@ class TestJSONImporter(unittest.TestCase):
         with self.assertRaises(FileNotFoundError):
             importer.load_from_file("nonexistent.json")
     
-    @patch('json_importer.json_importer.FalkorDB')
+    @patch('json2graph.json2graph.FalkorDB')
     def test_load_from_file_invalid_json(self, mock_falkordb):
         """Test loading invalid JSON from file."""
         mock_falkordb.return_value = self.mock_db
@@ -91,7 +91,7 @@ class TestJSONImporter(unittest.TestCase):
         finally:
             os.unlink(temp_file)
     
-    @patch('json_importer.json_importer.FalkorDB')
+    @patch('json2graph.json2graph.FalkorDB')
     def test_convert_simple_dict(self, mock_falkordb):
         """Test converting a simple dictionary."""
         mock_falkordb.return_value = self.mock_db
@@ -104,7 +104,7 @@ class TestJSONImporter(unittest.TestCase):
         # Verify that graph queries were made
         self.assertTrue(self.mock_graph.query.called)
     
-    @patch('json_importer.json_importer.FalkorDB')
+    @patch('json2graph.json2graph.FalkorDB')
     def test_convert_with_clear_db(self, mock_falkordb):
         """Test converting with clear_db option."""
         mock_falkordb.return_value = self.mock_db
@@ -118,7 +118,7 @@ class TestJSONImporter(unittest.TestCase):
         calls = [str(call) for call in self.mock_graph.query.call_args_list]
         self.assertTrue(any("DETACH DELETE" in call for call in calls))
     
-    @patch('json_importer.json_importer.FalkorDB')
+    @patch('json2graph.json2graph.FalkorDB')
     def test_sanitize_label(self, mock_falkordb):
         """Test label sanitization."""
         mock_falkordb.return_value = self.mock_db
@@ -131,7 +131,7 @@ class TestJSONImporter(unittest.TestCase):
         self.assertEqual(importer._sanitize_label("123label"), "L123label")
         self.assertEqual(importer._sanitize_label(""), "Node")
     
-    @patch('json_importer.json_importer.FalkorDB')
+    @patch('json2graph.json2graph.FalkorDB')
     def test_generate_hash(self, mock_falkordb):
         """Test hash generation for duplicate detection."""
         mock_falkordb.return_value = self.mock_db
@@ -151,7 +151,7 @@ class TestJSONImporter(unittest.TestCase):
         hash4 = importer._generate_hash({"b": 2, "a": 1})
         self.assertEqual(hash1, hash4)
     
-    @patch('json_importer.json_importer.FalkorDB')
+    @patch('json2graph.json2graph.FalkorDB')
     def test_format_properties(self, mock_falkordb):
         """Test property formatting for Cypher queries."""
         mock_falkordb.return_value = self.mock_db
@@ -183,7 +183,7 @@ class TestJSONImporter(unittest.TestCase):
         formatted = importer._format_properties(props)
         self.assertEqual(formatted, "{}")
     
-    @patch('json_importer.json_importer.FalkorDB')
+    @patch('json2graph.json2graph.FalkorDB')
     def test_escape_string(self, mock_falkordb):
         """Test string escaping for Cypher injection prevention."""
         mock_falkordb.return_value = self.mock_db

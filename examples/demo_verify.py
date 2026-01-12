@@ -11,16 +11,16 @@ import os
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from json_importer import JSONImporter
+from json2graph import JSONImporter
 
 def demo_without_db():
     """Demonstrate JSON Importer functionality with mocked database."""
     print("=" * 60)
-    print("JSON-importer Demo (Mocked Database)")
+    print("json2graph Demo (Mocked Database)")
     print("=" * 60)
     
     # Mock the FalkorDB connection
-    with patch('json_importer.json_importer.FalkorDB') as mock_falkordb:
+    with patch('json2graph.json2graph.FalkorDB') as mock_falkordb:
         mock_db = Mock()
         mock_graph = Mock()
         mock_db.select_graph.return_value = mock_graph
