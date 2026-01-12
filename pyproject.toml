@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "json-importer"
+name = "json2graph"
 version = "0.1.0"
 description = "A Python library to automatically import JSON to FalkorDB as a Graph"
 readme = "README.md"
@@ -30,12 +30,12 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/FalkorDB/JSON-importer"
-Repository = "https://github.com/FalkorDB/JSON-importer"
-Issues = "https://github.com/FalkorDB/JSON-importer/issues"
+Homepage = "https://github.com/FalkorDB/json2graph"
+Repository = "https://github.com/FalkorDB/json2graph"
+Issues = "https://github.com/FalkorDB/json2graph/issues"
 
 [tool.uv]
 dev-dependencies = []
 
 [tool.setuptools]
-packages = ["json_importer"]
+packages = ["json2graph"]

@@ -1,13 +1,13 @@
-# Contributing to JSON-importer
+# Contributing to json2graph
 
-Thank you for your interest in contributing to JSON-importer!
+Thank you for your interest in contributing to json2graph!
 
 ## Development Setup
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/FalkorDB/JSON-importer.git
-cd JSON-importer
+git clone https://github.com/FalkorDB/json2graph.git
+cd json2graph
 ```
 
 2. Install dependencies:
@@ -96,7 +96,7 @@ When reporting issues, please include:
 
 - Python version
 - FalkorDB version
-- JSON-importer version
+- json2graph version
 - Minimal reproduction example
 - Expected vs actual behavior
 - Error messages and stack traces

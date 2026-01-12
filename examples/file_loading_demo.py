@@ -15,11 +15,11 @@ from json_importer import JSONImporter
 def verify_file_loading():
     """Verify file loading functionality."""
     print("=" * 60)
-    print("JSON-importer File Loading Demo")
+    print("json2graph File Loading Demo")
     print("=" * 60)
     
     # Mock the FalkorDB connection
-    with patch('json_importer.json_importer.FalkorDB') as mock_falkordb:
+    with patch('json2graph.json2graph.FalkorDB') as mock_falkordb:
         mock_db = Mock()
         mock_graph = Mock()
         mock_db.select_graph.return_value = mock_graph

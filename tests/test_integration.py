@@ -7,7 +7,7 @@ import json
 import os
 import tempfile
 from unittest.mock import Mock, patch
-from json_importer import JSONImporter
+from json2graph import JSONImporter
 
 
 class TestJSONImporterIntegration(unittest.TestCase):
@@ -19,7 +19,7 @@ class TestJSONImporterIntegration(unittest.TestCase):
         self.mock_graph = Mock()
         self.mock_db.select_graph.return_value = self.mock_graph
     
-    @patch('json_importer.json_importer.FalkorDB')
+    @patch('json2graph.json2graph.FalkorDB')
     def test_complex_nested_structure(self, mock_falkordb):
         """Test converting complex nested JSON structure."""
         mock_falkordb.return_value = self.mock_db
@@ -59,7 +59,7 @@ class TestJSONImporterIntegration(unittest.TestCase):
         # Should have multiple create operations
         self.assertGreater(self.mock_graph.query.call_count, 5)
     
-    @patch('json_importer.json_importer.FalkorDB')
+    @patch('json2graph.json2graph.FalkorDB')
     def test_cypher_injection_prevention(self, mock_falkordb):
         """Test that malicious input is properly escaped."""
         mock_falkordb.return_value = self.mock_db
@@ -91,7 +91,7 @@ class TestJSONImporterIntegration(unittest.TestCase):
         self.assertTrue(query.strip().startswith("CREATE"))
         self.assertTrue(query.strip().endswith("RETURN n"))
     
-    @patch('json_importer.json_importer.FalkorDB')
+    @patch('json2graph.json2graph.FalkorDB')
     def test_array_of_primitives(self, mock_falkordb):
         """Test handling arrays of primitive values."""
         mock_falkordb.return_value = self.mock_db
@@ -108,7 +108,7 @@ class TestJSONImporterIntegration(unittest.TestCase):
         
         self.assertTrue(self.mock_graph.query.called)
     
-    @patch('json_importer.json_importer.FalkorDB')
+    @patch('json2graph.json2graph.FalkorDB')
     def test_mixed_array_types(self, mock_falkordb):
         """Test handling arrays with mixed types."""
         mock_falkordb.return_value = self.mock_db
@@ -130,7 +130,7 @@ class TestJSONImporterIntegration(unittest.TestCase):
         
         self.assertTrue(self.mock_graph.query.called)
     
-    @patch('json_importer.json_importer.FalkorDB')
+    @patch('json2graph.json2graph.FalkorDB')
     def test_special_characters_in_values(self, mock_falkordb):
         """Test handling special characters in string values."""
         mock_falkordb.return_value = self.mock_db
@@ -147,7 +147,7 @@ class TestJSONImporterIntegration(unittest.TestCase):
         
         self.assertTrue(self.mock_graph.query.called)
     
-    @patch('json_importer.json_importer.FalkorDB')
+    @patch('json2graph.json2graph.FalkorDB')
     def test_unicode_content(self, mock_falkordb):
         """Test handling Unicode characters."""
         mock_falkordb.return_value = self.mock_db
@@ -164,7 +164,7 @@ class TestJSONImporterIntegration(unittest.TestCase):
         
         self.assertTrue(self.mock_graph.query.called)
     
-    @patch('json_importer.json_importer.FalkorDB')
+    @patch('json2graph.json2graph.FalkorDB')
     def test_empty_structures(self, mock_falkordb):
         """Test handling empty objects and arrays."""
         mock_falkordb.return_value = self.mock_db
@@ -181,7 +181,7 @@ class TestJSONImporterIntegration(unittest.TestCase):
         
         self.assertTrue(self.mock_graph.query.called)
     
-    @patch('json_importer.json_importer.FalkorDB')
+    @patch('json2graph.json2graph.FalkorDB')
     def test_numeric_values(self, mock_falkordb):
         """Test handling various numeric types."""
         mock_falkordb.return_value = self.mock_db
@@ -200,7 +200,7 @@ class TestJSONImporterIntegration(unittest.TestCase):
         
         self.assertTrue(self.mock_graph.query.called)
     
-    @patch('json_importer.json_importer.FalkorDB')
+    @patch('json2graph.json2graph.FalkorDB')
     def test_duplicate_content_detection(self, mock_falkordb):
         """Test that duplicate content is detected and prevented."""
         mock_falkordb.return_value = self.mock_db
@@ -221,7 +221,7 @@ class TestJSONImporterIntegration(unittest.TestCase):
         hash3 = importer._generate_hash({"Root": data3})
         self.assertEqual(hash1, hash3)
     
-    @patch('json_importer.json_importer.FalkorDB')
+    @patch('json2graph.json2graph.FalkorDB')
     def test_clear_db_with_errors(self, mock_falkordb):
         """Test error handling during clear_db operation."""
         mock_falkordb.return_value = self.mock_db
@@ -234,7 +234,7 @@ class TestJSONImporterIntegration(unittest.TestCase):
         
         self.assertIn("Failed to clear database", str(context.exception))
     
-    @patch('json_importer.json_importer.FalkorDB')
+    @patch('json2graph.json2graph.FalkorDB')
     def test_load_from_file_with_encoding(self, mock_falkordb):
         """Test loading file with UTF-8 encoding."""
         mock_falkordb.return_value = self.mock_db
@@ -254,7 +254,7 @@ class TestJSONImporterIntegration(unittest.TestCase):
         finally:
             os.unlink(temp_file)
     
-    @patch('json_importer.json_importer.FalkorDB')
+    @patch('json2graph.json2graph.FalkorDB')
     def test_root_as_array(self, mock_falkordb):
         """Test when root data is an array."""
         mock_falkordb.return_value = self.mock_db
@@ -271,7 +271,7 @@ class TestJSONImporterIntegration(unittest.TestCase):
         
         self.assertTrue(self.mock_graph.query.called)
     
-    @patch('json_importer.json_importer.FalkorDB')
+    @patch('json2graph.json2graph.FalkorDB')
     def test_root_as_primitive(self, mock_falkordb):
         """Test when root data is a primitive value."""
         mock_falkordb.return_value = self.mock_db

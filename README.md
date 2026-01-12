@@ -1,10 +1,10 @@
-# JSON-importer
+# json2graph
 
 A Python library to automatically import JSON to FalkorDB as a Graph.
 
 ## Overview
 
-JSON-importer converts JSON data (from files or dictionaries) into a graph structure in FalkorDB. It automatically creates nodes from objects and arrays with smart labeling based on keys, extracts primitive values as properties, and creates relationships based on the JSON structure. The library handles nested data recursively and prevents duplicate nodes using content hashing.
+json2graph converts JSON data (from files or dictionaries) into a graph structure in FalkorDB. It automatically creates nodes from objects and arrays with smart labeling based on keys, extracts primitive values as properties, and creates relationships based on the JSON structure. The library handles nested data recursively and prevents duplicate nodes using content hashing.
 
 ## Features
 
@@ -41,7 +41,7 @@ pip install falkordb
 ## Quick Start
 
 ```python
-from json_importer import JSONImporter
+from json2graph import JSONImporter
 
 # Initialize the importer
 importer = JSONImporter(
@@ -67,7 +67,7 @@ importer.load_from_file("data.json", clear_db=True)
 ### Initialize the Importer
 
 ```python
-from json_importer import JSONImporter
+from json2graph import JSONImporter
 
 importer = JSONImporter(
     host="localhost",      # FalkorDB host (default: "localhost")
