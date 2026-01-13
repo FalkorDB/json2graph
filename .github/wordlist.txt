@@ -26,3 +26,9 @@ uv
 md
 employeesArray
 README
+
+pre
+Pre
+SSL
+lifecycle
+localhost
