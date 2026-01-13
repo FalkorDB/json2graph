@@ -107,6 +107,51 @@ class TestJSONImporterIntegration(unittest.TestCase):
         importer.convert(data)
         
         self.assertTrue(self.mock_graph.query.called)
+        
+        # Verify that arrays of scalars are stored as properties
+        # Should only have 1 CREATE query for the Root node
+        create_queries = [call for call in self.mock_graph.query.call_args_list 
+                         if 'CREATE (n:' in str(call)]
+        self.assertEqual(len(create_queries), 1, 
+                        "Arrays of scalars should not create separate nodes")
+        
+        # Verify the CREATE query contains array properties
+        create_query = str(create_queries[0])
+        self.assertIn("tags:", create_query)
+        self.assertIn("scores:", create_query)
+        self.assertIn("flags:", create_query)
+    
+    @patch('json2graph.json2graph.FalkorDB')
+    def test_scalar_array_as_property(self, mock_falkordb):
+        """Test that arrays of scalars are stored as properties, not nodes."""
+        mock_falkordb.return_value = self.mock_db
+        
+        importer = JSONImporter()
+        
+        # This is the exact example from the issue
+        data = {
+            "name": "John Doe",
+            "age": 30,
+            "skills": ["Python", "JavaScript"]
+        }
+        
+        importer.convert(data, clear_db=True)
+        
+        # Should have only 2 queries: 1 DELETE + 1 CREATE for the root node
+        self.assertEqual(self.mock_graph.query.call_count, 2)
+        
+        # Get the CREATE query
+        create_queries = [call[0][0] for call in self.mock_graph.query.call_args_list 
+                         if 'CREATE' in call[0][0]]
+        self.assertEqual(len(create_queries), 1)
+        
+        create_query = create_queries[0]
+        
+        # Verify it's a single node with array property
+        self.assertIn("skills:", create_query)
+        self.assertIn("['Python', 'JavaScript']", create_query)
+        # Should not create Array nodes
+        self.assertNotIn("skillsArray", create_query)
     
     @patch('json2graph.json2graph.FalkorDB')
     def test_mixed_array_types(self, mock_falkordb):
