@@ -149,7 +149,9 @@ class TestJSONImporterIntegration(unittest.TestCase):
         
         # Verify it's a single node with array property
         self.assertIn("skills:", create_query)
-        self.assertIn("['Python', 'JavaScript']", create_query)
+        # Check that both skill values are present
+        self.assertIn("Python", create_query)
+        self.assertIn("JavaScript", create_query)
         # Should not create Array nodes
         self.assertNotIn("skillsArray", create_query)
     

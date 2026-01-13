@@ -222,6 +222,9 @@ class JSONImporter:
         Returns:
             True if array contains only scalars, False otherwise
         """
+        if arr is None or not isinstance(arr, list):
+            return False
+        
         for item in arr:
             if isinstance(item, (dict, list)):
                 return False
