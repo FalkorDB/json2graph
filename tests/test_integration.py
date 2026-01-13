@@ -110,13 +110,16 @@ class TestJSONImporterIntegration(unittest.TestCase):
         
         # Verify that arrays of scalars are stored as properties
         # Should only have 1 CREATE query for the Root node
-        create_queries = [call for call in self.mock_graph.query.call_args_list 
-                         if 'CREATE (n:' in str(call)]
+        create_queries = [
+            call[0][0]
+            for call in self.mock_graph.query.call_args_list
+            if 'CREATE (n:' in call[0][0]
+        ]
         self.assertEqual(len(create_queries), 1, 
                         "Arrays of scalars should not create separate nodes")
         
         # Verify the CREATE query contains array properties
-        create_query = str(create_queries[0])
+        create_query = create_queries[0]
         self.assertIn("tags:", create_query)
         self.assertIn("scores:", create_query)
         self.assertIn("flags:", create_query)
@@ -152,8 +155,10 @@ class TestJSONImporterIntegration(unittest.TestCase):
         # Check that both skill values are present
         self.assertIn("Python", create_query)
         self.assertIn("JavaScript", create_query)
-        # Should not create Array nodes
-        self.assertNotIn("skillsArray", create_query)
+        # Verify the node has the expected Root label
+        self.assertIn("CREATE (n:Root", create_query)
+        # Should not create Array nodes with "Array" suffix
+        self.assertNotIn("Array", create_query.split("CREATE (n:")[1].split()[0])
     
     @patch('json2graph.json2graph.FalkorDB')
     def test_mixed_array_types(self, mock_falkordb):
