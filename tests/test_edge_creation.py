@@ -3,6 +3,7 @@ Unit test for the edge creation issue fix.
 Tests that edges are properly created when converting JSON with nested structures.
 """
 
+import re
 import unittest
 from unittest.mock import Mock, patch
 from json2graph import JSONImporter
@@ -55,7 +56,6 @@ class TestEdgeCreation(unittest.TestCase):
         
         # Verify that relationship queries reference nodes with matching _hash values
         # Extract all _hash values from CREATE queries
-        import re
         created_hashes = []
         for query in create_queries:
             hash_match = re.search(r"_hash: '([a-f0-9]+)'", query)
@@ -117,7 +117,6 @@ class TestEdgeCreation(unittest.TestCase):
         importer.convert(data, clear_db=True)
         
         # Extract hashes from node creation
-        import re
         node_hashes = {}
         for query in queries:
             if 'CREATE' in query:

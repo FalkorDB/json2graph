@@ -122,11 +122,14 @@ class JSONImporter:
         """
         # Use the provided _hash if it exists, otherwise generate one
         # This ensures the hash we return matches what's stored in the node
+        # Note: When generating a new hash, we calculate it BEFORE adding _hash to properties
+        # to avoid including _hash in its own hash calculation (circular reference)
         if "_hash" in properties:
             node_hash = properties["_hash"]
         else:
-            # Generate hash for duplicate detection
+            # Generate hash for duplicate detection based on label and current properties
             node_hash = self._generate_hash({label: properties})
+            # Add the hash to properties so it's stored in the node for relationship matching
             properties["_hash"] = node_hash
         
         # Check if node already exists in cache
