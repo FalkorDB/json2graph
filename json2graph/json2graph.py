@@ -115,13 +115,19 @@ class JSONImporter:
         
         Args:
             label: Node label
-            properties: Node properties
+            properties: Node properties (may include _hash)
             
         Returns:
             Node ID (hash)
         """
-        # Generate hash for duplicate detection
-        node_hash = self._generate_hash({label: properties})
+        # Use the provided _hash if it exists, otherwise generate one
+        # This ensures the hash we return matches what's stored in the node
+        if "_hash" in properties:
+            node_hash = properties["_hash"]
+        else:
+            # Generate hash for duplicate detection
+            node_hash = self._generate_hash({label: properties})
+            properties["_hash"] = node_hash
         
         # Check if node already exists in cache
         if node_hash in self._node_cache:
@@ -351,7 +357,9 @@ class JSONImporter:
         
         props = []
         for key, value in properties.items():
-            sanitized_key = self._sanitize_label(key)
+            # Don't sanitize the special _hash property key - it needs to match exactly
+            # in both node creation and relationship queries
+            sanitized_key = key if key == "_hash" else self._sanitize_label(key)
             
             if isinstance(value, str):
                 # Escape strings properly to prevent injection
