@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "json2graph"
-version = "0.1.0"
+version = "0.2.0"
 description = "A Python library to automatically import JSON to FalkorDB as a Graph"
 readme = "README.md"
 authors = [
@@ -19,11 +19,10 @@ classifiers = [
     "Topic :: Database",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
 ]
 dependencies = [
     "falkordb>=1.0.0",
