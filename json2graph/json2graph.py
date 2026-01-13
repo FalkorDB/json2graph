@@ -212,6 +212,24 @@ class JSONImporter:
                 return self._create_node(key_name or "Primitive", properties)
             return None
     
+    def _is_scalar_array(self, arr: List) -> bool:
+        """
+        Check if an array contains only scalar values (no nested objects or arrays).
+        
+        Args:
+            arr: List to check
+            
+        Returns:
+            True if array contains only scalars, False otherwise
+        """
+        if not isinstance(arr, list):
+            return False
+        
+        for item in arr:
+            if isinstance(item, (dict, list)):
+                return False
+        return True
+    
     def _process_object(self, obj: Dict, parent_node_id: Optional[str], 
                        relationship_name: str, key_name: str) -> str:
         """
@@ -231,7 +249,10 @@ class JSONImporter:
         nested = {}
         
         for k, v in obj.items():
-            if isinstance(v, (dict, list)):
+            if isinstance(v, list) and self._is_scalar_array(v):
+                # Arrays of scalars should be stored as properties
+                properties[k] = v
+            elif isinstance(v, (dict, list)):
                 nested[k] = v
             else:
                 # Store primitive values as properties
@@ -353,7 +374,25 @@ class JSONImporter:
         for key, value in properties.items():
             sanitized_key = self._sanitize_label(key)
             
-            if isinstance(value, str):
+            if isinstance(value, list):
+                # Format array property for Cypher
+                array_elements = []
+                for item in value:
+                    if isinstance(item, str):
+                        escaped_item = self._escape_string(item)
+                        array_elements.append(f"'{escaped_item}'")
+                    elif isinstance(item, bool):
+                        array_elements.append(str(item).lower())
+                    elif isinstance(item, (int, float)):
+                        array_elements.append(str(item))
+                    elif item is None:
+                        array_elements.append("null")
+                    else:
+                        # Convert other types to string and escape
+                        escaped_item = self._escape_string(str(item))
+                        array_elements.append(f"'{escaped_item}'")
+                props.append(f"{sanitized_key}: [{', '.join(array_elements)}]")
+            elif isinstance(value, str):
                 # Escape strings properly to prevent injection
                 escaped_value = self._escape_string(value)
                 props.append(f"{sanitized_key}: '{escaped_value}'")
