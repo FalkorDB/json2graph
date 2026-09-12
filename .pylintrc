@@ -1,0 +1,57 @@
+[MAIN]
+# Use multiple processes to speed up Pylint
+jobs=0
+
+# Allow loading of arbitrary C extensions
+unsafe-load-any-extension=no
+
+[MESSAGES CONTROL]
+# Disable specific warnings that are too strict or not relevant
+disable=
+    # Design
+    too-few-public-methods,
+    
+    # Formatting (can be handled by other tools)
+    trailing-whitespace,
+    line-too-long,
+    
+    # Protected access is OK in tests
+    protected-access,
+    
+    # Import errors (dependencies may not be installed)
+    import-error,
+    
+    # Code duplication between tests is acceptable
+    duplicate-code
+
+[FORMAT]
+# Maximum number of characters on a single line
+max-line-length=120
+
+[DESIGN]
+# Maximum number of arguments for function / method
+max-args=7
+
+# Maximum number of attributes for a class
+max-attributes=10
+
+# Maximum number of branches for function / method body
+max-branches=15
+
+[BASIC]
+# Good variable names which should always be accepted
+good-names=i,j,k,ex,_,db,id
+
+[SIMILARITIES]
+# Minimum lines number of a similarity
+min-similarity-lines=10
+
+[REPORTS]
+# Set the output format
+output-format=colorized
+
+# Include message's id in output
+include-ids=yes
+
+# Reports will be disabled by default
+reports=no
